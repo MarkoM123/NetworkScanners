@@ -1,0 +1,76 @@
+body {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #121212;
+    color: #00ff00;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+h1 {
+    text-align: center;
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #00ff00;
+    background-color: #121212;
+    color: #00ff00;
+}
+
+button {
+    padding: 10px;
+    background-color: #00ff00;
+    border: none;
+    color: #121212;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #00cc00;
+}
+
+#scanOutput {
+    white-space: pre-wrap;
+    background-color: #222;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #00ff00;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+a {
+    text-decoration: none;
+}
+
+#downloadLink button {
+    background-color: #444;
+    color: #00ff00;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+#downloadLink button:hover {
+    background-color: #333;
+}
