@@ -1,5 +1,5 @@
 import subprocess
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"
@@ -52,12 +52,23 @@ def nmap():
         command = ['nmap'] + options + [ip]
 
         try:
-            # Izvršavanje Nmap komande
+            print(f"Running command: {' '.join(command)}")  # Dodajemo log za Nmap komandu
             result = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
-            return jsonify({'result': result})  # Vraćanje rezultata u JSON formatu
+            print("Nmap command executed successfully.")  # Log za uspeh komande
+            print(f"Result: {result}")  # Prikazivanje rezultata u terminalu
+            return redirect(url_for('nmap_results', result=result))
         except subprocess.CalledProcessError as e:
-            # Obrada greške
-            return jsonify({'result': f"Error: {e.output}"})
+            print(f"Error: {e.output}")  # Log za grešku
+            return redirect(url_for('nmap_results', result=f"Error: {e.output}"))
+
+# Stranica za prikaz rezultata
+
+@app.route('/nmap_results')
+def nmap_results():
+    result = request.args.get('result', 'No results available.')
+    with open('static/results/nmap_output.txt', 'w') as file:
+         file.write(result)
+    return render_template('nmap_results.html', result=result)
 
 if __name__ == '__main__':
     app.run(debug=True)

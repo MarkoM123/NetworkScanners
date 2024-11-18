@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nmap Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="background-color: black; color: green; font-family: monospace;">
+    <h1>Nmap Scan Results</h1>
+    <pre>{{ result }}</pre>
+
+    <!-- Dugme za preuzimanje datoteke -->
+    <a href="{{ url_for('static', filename='results/nmap_output.txt') }}" download>
+        <button style="color: green; background-color: black; border: 1px solid green; padding: 10px;">
+            Download Results
+        </button>
+    </a>
+
+    <!-- Dugme za povratak na prethodnu stranicu -->
+    <button onclick="window.history.back()" style="color: green; background-color: black; border: 1px solid green; padding: 10px;">
+        Back to Previous Page
+    </button>
+</body>
+</html>
