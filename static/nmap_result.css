@@ -1,0 +1,11 @@
+.result-box {
+    background: #2e2e2e;
+    color: #f4f4f9;
+    font-family: monospace;
+    text-align: left;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    max-height: 400px;
+    white-space: pre-wrap;
+}

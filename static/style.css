@@ -1,76 +1,84 @@
+/* Generalne stilizacije */
 body {
+    background-color: #121212; /* Crna pozadina */
+    color: #00ff00; /* Zeleni tekst */
     font-family: 'Courier New', Courier, monospace;
-    background-color: #121212;
-    color: #00ff00;
+    text-align: center;
     margin: 0;
     padding: 0;
-}
-
-.container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #1e1e1e;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-}
-
-h1 {
-    text-align: center;
-    color: #00ff00;
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-}
-
-form {
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
-input[type="text"] {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #00ff00;
-    background-color: #121212;
+/* Stilizacija naslova */
+h1 {
+    font-size: 4rem;
     color: #00ff00;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    text-shadow: 0 0 15px #00ff00;
 }
 
-button {
-    padding: 10px;
-    background-color: #00ff00;
-    border: none;
-    color: #121212;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #00cc00;
-}
-
-#scanOutput {
-    white-space: pre-wrap;
-    background-color: #222;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #00ff00;
+/* Stil za folder linkove */
+.folders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-top: 20px;
-    font-size: 14px;
 }
 
+.folder {
+    background-color: #333;
+    color: #00ff00;
+    padding: 15px 30px;
+    margin: 15px;
+    border-radius: 10px;
+    width: 250px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px #00ff00;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover efekat na foldere */
+.folder:hover {
+    background-color: #00ff00;
+    color: #121212;
+    transform: scale(1.1);
+    box-shadow: 0 0 25px #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+/* Stil za linkove u meniju */
 a {
     text-decoration: none;
-}
-
-#downloadLink button {
-    background-color: #444;
     color: #00ff00;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 20px;
+    font-size: 1.2rem;
+    margin: 10px;
+    transition: color 0.3s ease;
 }
 
-#downloadLink button:hover {
-    background-color: #333;
+/* Hover efekat za linkove */
+a:hover {
+    color: #00cc00;
+    text-decoration: underline;
+}
+
+/* Efekat za pozadinu */
+body {
+    background-color: #121212; /* Crna pozadina */
+    color: #00ff00; /* Zeleni tekst */
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+/* Centriranje sadržaja */
+.container {
+    text-align: center;
 }

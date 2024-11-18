@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconnaissance Tools</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <div class="scan-container">
+        <h1>Reconnaissance Tools</h1>
+        <div class="tool-buttons">
+            <a href="{{ url_for('nmap') }}" class="tool-button">Nmap Scanner</a>
+            <a href="#" class="tool-button">Whois Lookup</a>
+            <a href="#" class="tool-button">DNS Enumeration</a>
+            <a href="#" class="tool-button">IP Geolocation</a>
+        </div>
+    </div>
+</body>
+</html>

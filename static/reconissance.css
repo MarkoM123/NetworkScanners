@@ -1,0 +1,63 @@
+/* Glavni reset za marginu i padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Pozadinska boja za celu stranicu */
+body {
+    background-color: #121212;
+    font-family: 'Courier New', Courier, monospace;
+    color: #00ff00; /* Hakerski zeleni tekst */
+    text-align: center;
+}
+
+/* Container za centriranje sadržaja */
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Naslov */
+h1 {
+    font-size: 3rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    color: #00ff00;
+    border-bottom: 3px solid #00ff00;
+    padding-bottom: 10px;
+}
+
+/* Stil za dugmadi */
+.tool-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Razmak između dugmadi */
+}
+
+.tool-button {
+    background-color: #333;
+    color: #00ff00;
+    font-size: 1.5rem;
+    padding: 15px 30px;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.tool-button:hover {
+    background-color: #00ff00;
+    color: #121212;
+    transform: scale(1.1); /* Efekat uvećanja */
+}
+
+.tool-button:active {
+    transform: scale(0.95); /* Efekat smanjenja kad je dugme pritisnuto */
+}

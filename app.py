@@ -1,56 +1,63 @@
+import subprocess
 from flask import Flask, render_template, request, jsonify
-import nmap
 
 app = Flask(__name__)
-nm = nmap.PortScanner()
+app.secret_key = "your_secret_key"
 
+# Početna stranica
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/scan', methods=['POST'])
+# Stranica za Reconnaissance
+@app.route('/scan')
 def scan():
-    data = request.get_json()
-    ip_address = data.get('ipAddress')
-    
-    # Log za primanje IP adrese
-    print(f"Received IP address: {ip_address}")
-    
-    try:
-        # Validacija IP adrese
-        if not ip_address:
-            return jsonify({'result': "Invalid IP address format"})
-        
-        print(f"Starting scan for IP address: {ip_address}")
-        
-        # Pokretanje skeniranja sa širim opsegom portova
-        nm.scan(hosts=ip_address, arguments='-p-')  # Skener za sve portove
-        
-        scan_result = ""
-        
-        # Proveri sve hostove koji su pronađeni
-        if not nm.all_hosts():  # Ako nema hostova u rezultatu
-            print("No hosts found")
-            return jsonify({'result': "No open ports found on the provided IP address."})
-        
-        # Proveri sve portove za svakog hosta
-        for host in nm.all_hosts():
-            print(f"Scanning results for {host}: {nm[host]}")
-            scan_result += f"Host: {host} ({nm[host].hostname()})\n"
-            scan_result += "Ports:\n"
-            try:
-                for port in nm[host]['tcp']:  # Proveri ako postoje TCP portovi
-                    port_state = nm[host]['tcp'][port]['state']
-                    scan_result += f"Port {port}: {port_state}\n"
-            except KeyError:
-                scan_result += "No TCP ports found or scanned.\n"
-        
-        print("Scan complete. Results:", scan_result)
-        return jsonify({'result': scan_result})
+    return render_template('scan.html')
 
-    except Exception as e:
-        print("Error during scan:", str(e))
-        return jsonify({'result': f"Error: {str(e)}"})
+# Stranica za Network Scanners
+@app.route('/network_scanners')
+def network_scanners():
+    return render_template('network_scanners.html')
 
-if __name__ == "__main__":
+# Stranica za Nmap formu
+@app.route('/nmap', methods=['GET', 'POST'])
+def nmap():
+    if request.method == 'GET':
+        # Prikaz forme za Nmap
+        return render_template('nmap.html')
+    
+    if request.method == 'POST':
+        # Obrada podataka sa frontend-a
+        scan_data = request.get_json()
+        ip = scan_data['target']
+        options = []
+
+        # Dodavanje opcija u zavisnosti od izbora korisnika
+        if scan_data['options'].get('ping_scan'):
+            options.append('-sn')
+        if scan_data['options'].get('port_scan'):
+            options.append('-p-')
+        if scan_data['options'].get('os_scan'):
+            options.append('-O')
+        if scan_data['options'].get('detect_service'):
+            options.append('-sV')
+        if scan_data['options'].get('cve_detection'):
+            options.append('--script=vuln')
+        if scan_data['options'].get('flood_detection'):
+            options.append('--script=dos')
+        if scan_data['options'].get('tcp_fin_scan'):
+            options.append('-sF')
+
+        # Kreiranje Nmap komande
+        command = ['nmap'] + options + [ip]
+
+        try:
+            # Izvršavanje Nmap komande
+            result = subprocess.check_output(command, stderr=subprocess.STDOUT, universal_newlines=True)
+            return jsonify({'result': result})  # Vraćanje rezultata u JSON formatu
+        except subprocess.CalledProcessError as e:
+            # Obrada greške
+            return jsonify({'result': f"Error: {e.output}"})
+
+if __name__ == '__main__':
     app.run(debug=True)
