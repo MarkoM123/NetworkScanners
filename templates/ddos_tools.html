@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDoS Tools</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="ddos-container">
+        <h1>DDoS Tool</h1>
+        <form id="ddos-form">
+            <label for="target">Target URL or IP:</label>
+            <input type="text" id="target" name="target" placeholder="http://example.com" required>
+
+            <label for="method">Attack Method:</label>
+            <select id="method" name="method" required>
+                <option value="http-flood">HTTP Flood</option>
+                <option value="syn-flood">SYN Flood</option>
+                <option value="udp-flood">UDP Flood</option>
+            </select>
+
+            <label for="requests">Number of Requests:</label>
+            <input type="number" id="requests" name="requests" min="1" max="100000" value="1000" required>
+
+            <button type="submit" class="attack-button">Start Attack</button>
+        </form>
+        <div id="output">
+            <h2>Output</h2>
+            <pre id="result">Fill the form and click "Start Attack" to see the results.</pre>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/ddos.js') }}"></script>
+</body>
+</html>

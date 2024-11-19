@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sniffing Tools</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="sniffing-container">
+        <h1>Sniffing Tools</h1>
+        <p>Select a tool below to start sniffing network traffic:</p>
+        <div class="tool-buttons">
+            <button class="tool-button" data-tool="tcpdump">Run TCPDump</button>
+            <button class="tool-button" data-tool="wireshark">Run Wireshark</button>
+            <button class="tool-button" data-tool="ettercap">Run Ettercap</button>
+        </div>
+        <div id="output">
+            <h2>Output</h2>
+            <pre id="result">Select a tool to view its output.</pre>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/sniffing.js') }}"></script>
+</body>
+</html>

