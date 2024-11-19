@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi Tools</title>
+    <link rel="stylesheet" href="/static/wifi_tools.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Wi-Fi Tools Dashboard</h1>
+        <form method="POST" action="/wifi_tools">
+            <label for="tool">Select Tool:</label>
+            <select name="tool" id="tool">
+                <option value="aircrack-ng">Aircrack-ng</option>
+                <option value="kismet">Kismet</option>
+                <option value="wifite">Wifite</option>
+                <option value="wash">WPS Scan (Wash)</option>
+            </select>
+            <br><br>
+            <label for="arguments">Arguments:</label>
+            <input type="text" id="arguments" name="arguments" placeholder="Enter additional arguments">
+            <br><br>
+            <button type="submit">Run Tool</button>
+        </form>
+
+        {% if result %}
+        <h2>Tool Output:</h2>
+        <pre>{{ result }}</pre>
+        {% endif %}
+    </div>
+</body>
+</html>

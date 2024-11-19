@@ -1,17 +1,37 @@
-// Skriva i otkriva alatke na klik
 document.addEventListener("DOMContentLoaded", function() {
-    const folderTitles = document.querySelectorAll(".folder-title");
+    // Selektovanje svih dugmića koji imaju klasu 'tool-button'
+    const toolButtons = document.querySelectorAll('.tool-button');
 
-    folderTitles.forEach(function(title) {
-        title.addEventListener("click", function() {
-            // Na osnovu ID-a foldera, prikazuj ili sakrij alatke
-            const tools = title.nextElementSibling;
+    toolButtons.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            // Sprečava učitavanje stranice samo ako je kliknuto na dugme 'DNS Enumeration'
+            if (button.textContent.trim() === "DNS Enumeration") {
+                event.preventDefault(); // Sprečava učitavanje stranice
+                console.log("Pokreće se DNS Enumeration alat");
 
-            // Toggle (prikazivanje/sakrivanje)
-            if (tools.style.display === "none" || tools.style.display === "") {
-                tools.style.display = "block";
-            } else {
-                tools.style.display = "none";
+                // Pokretanje DNS Enumeration alata sa fetch metodom
+                fetch('/dns_enum', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ target: "example.com" })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Rezultat DNS Enumeration:", data);
+                    alert(data.message);
+                })
+                .catch(error => {
+                    console.error("Greška pri izvršavanju DNS Enumeration:", error);
+                    alert("Došlo je do greške pri izvršavanju DNS Enumeration.");
+                });
+                
+            }
+            // Ako nije DNS Enumeration, dopušta učitavanje stranice
+            else {
+                // Za ostale dugmice, dozvoljava učitavanje stranice
+                console.log("Kliknuto dugme:", button.textContent.trim());
             }
         });
     });

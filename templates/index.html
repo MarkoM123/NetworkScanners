@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penetration Testing Tools</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Network Scanners</title>
+    <!-- Link ka eksternom CSS fajlu -->
+    <link rel="stylesheet" href="static/style.css">
 </head>
-<body style="background-color: black; color: green; font-family: monospace;">
-    <h1>Penetration Testing Tools</h1>
-    <div>
-        <a href="{{ url_for('scan') }}" class="folder">Reconnaissance</a>
-        <a href="{{ url_for('network_scanners') }}" class="folder">Network Scanners</a>
+<body>
+    <header>
+        <h1>Network Scanners</h1>
+    </header>
+    <div class="container">
+        <h2>Pentesting Tools</h2>
+        <ul class="folder-list">
+            <!-- Već postojeće kategorije -->
+            <li><a href="/scan">Reconnaissance</a></li>
+            <li><a href="/network_scanners">Network Scanners</a></li>
+            <li><a href="/exploitation_tools">Exploitation Tools</a></li>
+            <li><a href="/wifi_tools">Wi-Fi Tools</a></li>
+            <li><a href="/password_cracking">Password Cracking Tools</a></li>
+            <li><a href="/sniffing_tools">Sniffing Tools</a></li>
+            <li><a href="/ddos_tools">DDoS Tools</a></li>
+            <li><a href="/social_engineering_tools">Social Engineering Tools</a></li>
+        </ul>
     </div>
 </body>
 </html>

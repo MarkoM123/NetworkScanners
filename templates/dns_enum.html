@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS Enumeration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>DNS Enumeration Tools</h1>
+    <div class="container">
+        <form id="dns-form">
+            <div class="form-group">
+                <label for="ip">Enter IP Address or Domain:</label>
+                <input type="text" id="ip" name="ip" required placeholder="e.g. example.com" />
+            </div>
+            <div class="form-group">
+                <label for="tool">Choose a Tool:</label>
+                <select id="tool" name="tool" required>
+                    <option value="sublister">Sublister</option>
+                    <option value="amass">Amass</option>
+                    <option value="dnsrecon">DnsRecon</option>
+                    <option value="dnssdumpster">DnsDumpster</option>
+                </select>
+            </div>
+            <button type="submit">Run Tool</button>
+        </form>
+    </div>
+
+    <div id="resultContainer">
+        <div id="result">Results will appear here...</div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dnsForm = document.getElementById("dns-form");
+
+            if (dnsForm) {
+                dnsForm.addEventListener("submit", function (event) {
+                    event.preventDefault(); // Sprečava osvežavanje stranice
+
+                    const ip = document.getElementById("ip").value;
+                    const tool = document.getElementById("tool").value;
+
+                    console.log(`Pokrećem alat ${tool} za metu ${ip}`);
+
+                    // AJAX zahtev ka Flask backend-u
+                    fetch('/dns_enum', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            target: ip,
+                            tool: tool,
+                        }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const resultContainer = document.getElementById("result");
+                            if (data.error) {
+                                resultContainer.textContent = `Greška: ${data.error}`;
+                            } else {
+                                resultContainer.textContent = data.result;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Greška pri slanju zahteva:', error);
+                            const resultContainer = document.getElementById("result");
+                            resultContainer.textContent = "Došlo je do greške pri obradi zahteva.";
+                        });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

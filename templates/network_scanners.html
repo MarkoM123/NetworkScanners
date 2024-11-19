@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Scanners</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Network Scanners</h1>
+        <p>Choose a tool and provide necessary parameters for scanning.</p>
+
+        <form id="scanner-form" method="POST" action="/network_scanners">
+            <div class="tool-selection">
+                <label for="tool">Select a Tool:</label>
+                <select id="tool" name="tool" required>
+                    <option value="nikto">Nikto</option>
+                    <option value="sqlmap">SQLMap</option>
+                    <option value="wfuzz">WFuzz</option>
+                    <option value="wafwoof">WafW00f</option>
+                    <option value="whatweb">WhatWeb</option>
+                </select>
+            </div>
+
+            <div class="input-fields">
+                <div id="target-input">
+                    <label for="target">Target URL:</label>
+                    <input type="text" id="target" name="target" placeholder="Enter target URL (e.g., http://example.com)" required>
+                </div>
+                
+                <div id="additional-options">
+                    <!-- Nikto specific options -->
+                    <div id="nikto-options" class="tool-options">
+                        <label for="nikto-option">Nikto Scan Options:</label>
+                        <input type="text" id="nikto-option" name="nikto-option" placeholder="Optional: Additional Nikto options">
+                    </div>
+
+                    <!-- SQLMap specific options -->
+                    <div id="sqlmap-options" class="tool-options">
+                        <label for="sqlmap-option">SQLMap Scan Options:</label>
+                        <input type="text" id="sqlmap-option" name="sqlmap-option" placeholder="Optional: Additional SQLMap options">
+                    </div>
+
+                    <!-- WFuzz specific options -->
+                    <div id="wfuzz-options" class="tool-options">
+                        <label for="wfuzz-option">WFuzz Scan Options:</label>
+                        <input type="text" id="wfuzz-option" name="wfuzz-option" placeholder="Optional: Additional WFuzz options">
+                    </div>
+
+                    <!-- WafW00f specific options -->
+                    <div id="wafwoof-options" class="tool-options">
+                        <label for="wafwoof-option">WafW00f Scan Options:</label>
+                        <input type="text" id="wafwoof-option" name="wafwoof-option" placeholder="Optional: Additional WafW00f options">
+                    </div>
+
+                    <!-- WhatWeb specific options -->
+                    <div id="whatweb-options" class="tool-options">
+                        <label for="whatweb-option">WhatWeb Scan Options:</label>
+                        <input type="text" id="whatweb-option" name="whatweb-option" placeholder="Optional: Additional WhatWeb options">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Run Scan</button>
+        </form>
+
+        <div id="scan-results">
+            <!-- Results will be displayed here after scan -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const toolSelect = document.getElementById("tool");
+            const toolOptions = document.querySelectorAll(".tool-options");
+
+            toolSelect.addEventListener("change", function() {
+                // Hide all options by default
+                toolOptions.forEach(function(option) {
+                    option.style.display = "none";
+                });
+
+                // Show selected tool's specific options
+                const selectedTool = toolSelect.value;
+                if (selectedTool === "nikto") {
+                    document.getElementById("nikto-options").style.display = "block";
+                } else if (selectedTool === "sqlmap") {
+                    document.getElementById("sqlmap-options").style.display = "block";
+                } else if (selectedTool === "wfuzz") {
+                    document.getElementById("wfuzz-options").style.display = "block";
+                } else if (selectedTool === "wafwoof") {
+                    document.getElementById("wafwoof-options").style.display = "block";
+                } else if (selectedTool === "whatweb") {
+                    document.getElementById("whatweb-options").style.display = "block";
+                }
+            });
+
+            // Trigger initial change to show default options
+            toolSelect.dispatchEvent(new Event("change"));
+        });
+    </script>
+</body>
+</html>
+

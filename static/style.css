@@ -1,8 +1,8 @@
 /* Generalne stilizacije */
 body {
-    background-color: #121212; /* Crna pozadina */
-    color: #00ff00; /* Zeleni tekst */
-    font-family: 'Courier New', Courier, monospace;
+    background-color: #121212 !important; /* Crna pozadina */
+    color: #00ff00 !important; /* Zeleni tekst */
+    font-family: 'Courier New', Courier, monospace !important;
     text-align: center;
     margin: 0;
     padding: 0;
@@ -15,70 +15,70 @@ body {
 
 /* Stilizacija naslova */
 h1 {
-    font-size: 4rem;
-    color: #00ff00;
+    font-size: 4rem !important;
+    color: #00ff00 !important;
     margin-bottom: 30px;
-    text-transform: uppercase;
-    letter-spacing: 5px;
-    text-shadow: 0 0 15px #00ff00;
+    text-transform: uppercase !important;
+    letter-spacing: 5px !important;
+    text-shadow: 0 0 15px #00ff00 !important;
 }
 
 /* Stil za folder linkove */
 .folders {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    margin-top: 20px !important;
 }
 
 .folder {
-    background-color: #333;
-    color: #00ff00;
-    padding: 15px 30px;
-    margin: 15px;
-    border-radius: 10px;
-    width: 250px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 1.5rem;
-    text-transform: uppercase;
-    box-shadow: 0 0 10px #00ff00;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #333 !important;
+    color: #00ff00 !important;
+    padding: 15px 30px !important;
+    margin: 15px !important;
+    border-radius: 10px !important;
+    width: 250px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    font-size: 1.5rem !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 0 10px #00ff00 !important;
+    transition: transform 0.3s ease !important, box-shadow 0.3s ease !important;
 }
 
 /* Hover efekat na foldere */
 .folder:hover {
-    background-color: #00ff00;
-    color: #121212;
-    transform: scale(1.1);
-    box-shadow: 0 0 25px #00ff00;
-    text-shadow: 0 0 10px #00ff00;
+    background-color: #00ff00 !important;
+    color: #121212 !important;
+    transform: scale(1.1) !important;
+    box-shadow: 0 0 25px #00ff00 !important;
+    text-shadow: 0 0 10px #00ff00 !important;
 }
 
 /* Stil za linkove u meniju */
 a {
-    text-decoration: none;
-    color: #00ff00;
-    font-size: 1.2rem;
-    margin: 10px;
-    transition: color 0.3s ease;
+    text-decoration: none !important;
+    color: #00ff00 !important;
+    font-size: 1.2rem !important;
+    margin: 10px !important;
+    transition: color 0.3s ease !important;
 }
 
 /* Hover efekat za linkove */
 a:hover {
-    color: #00cc00;
-    text-decoration: underline;
+    color: #00cc00 !important;
+    text-decoration: underline !important;
 }
 
 /* Efekat za pozadinu */
 body {
-    background-color: #121212; /* Crna pozadina */
-    color: #00ff00; /* Zeleni tekst */
-    font-family: 'Courier New', Courier, monospace;
-    text-align: center;
+    background-color: #121212 !important; /* Crna pozadina */
+    color: #00ff00 !important; /* Zeleni tekst */
+    font-family: 'Courier New', Courier, monospace !important;
+    text-align: center !important;
 }
 
 /* Centriranje sadržaja */
 .container {
-    text-align: center;
+    text-align: center !important;
 }

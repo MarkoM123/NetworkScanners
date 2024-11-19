@@ -1,0 +1,117 @@
+/* Globalne postavke */
+body {
+    font-family: 'Courier New', Courier, monospace !important; /* Monospaced font za hakerski izgled */
+    background-color: #1a1a1a !important; /* Tamna pozadina */
+    color: #00FF00 !important; /* Zelena boja teksta koja podseća na terminal */
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100vh !important;
+    text-align: center !important;
+}
+
+/* Glavni naslov */
+h1 {
+    font-size: 3rem !important;
+    margin-bottom: 30px !important;
+    color: #00FF00 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    animation: glitch 1.5s infinite alternate-reverse !important;
+}
+
+/* Efekat na tekst za naslov */
+@keyframes glitch {
+    0% {
+        text-shadow: -2px 0 red, 2px 0 blue !important;
+        transform: translateX(1px) !important;
+    }
+    100% {
+        text-shadow: -2px 0 blue, 2px 0 red !important;
+        transform: translateX(-1px) !important;
+    }
+}
+
+/* Stilovi za formu */
+.container {
+    background-color: rgba(0, 0, 0, 0.8) !important; /* Poluprovidna crna pozadina za formu */
+    padding: 40px !important;
+    border-radius: 10px !important;
+    width: 350px !important;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
+}
+
+.form-group {
+    margin-bottom: 20px !important;
+}
+
+/* Labela za polja */
+label {
+    font-size: 1.2rem !important;
+    margin-bottom: 10px !important;
+    display: block !important;
+    text-align: left !important;
+    color: #00FF00 !important;
+    letter-spacing: 1px !important;
+}
+
+/* Input polja */
+input[type="text"], select {
+    width: 100% !important;
+    padding: 10px !important;
+    margin-bottom: 20px !important;
+    background-color: #333 !important;
+    color: #00FF00 !important;
+    border: 2px solid #00FF00 !important;
+    border-radius: 5px !important;
+    font-size: 1rem !important;
+}
+
+input[type="text"]:focus, select:focus {
+    outline: none !important;
+    border-color: #FF0000 !important;
+    background-color: #222 !important;
+}
+
+/* Dugme za submit */
+button {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 1.2rem !important;
+    background-color: #00FF00 !important;
+    color: #000 !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    transition: background-color 0.3s ease !important;
+}
+
+button:hover {
+    background-color: #FF0000 !important;
+    color: #FFF !important;
+}
+
+/* Rezultati */
+#resultContainer {
+    margin-top: 30px !important;
+    font-size: 1.5rem !important;
+    color: #00FF00 !important;
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+}
+
+/* Glowing efekat za rezultate */
+#result {
+    animation: glow 1.5s infinite alternate !important;
+}
+
+@keyframes glow {
+    0% {
+        text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00 !important;
+    }
+    100% {
+        text-shadow: 0 0 20px #FF0000, 0 0 30px #FF0000, 0 0 40px #FF0000 !important;
+    }
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whois Lookup</title>
+</head>
+<body>
+    <h1>Whois Lookup</h1>
+    <form id="whoisForm">
+        <label for="target">Target:</label>
+        <input type="text" id="target" name="target" required>
+        <label for="tool">Tool:</label>
+        <select id="tool" name="tool">
+            <option value="whois">Whois</option>
+            <option value="theharvester">TheHarvester</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        // Event listener za submit formu
+        document.getElementById('whoisForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Sprečava slanje forme na standardni način
+
+            let target = document.getElementById('target').value;
+            let tool = document.getElementById('tool').value;
+
+            // Podaci koje šaljemo u JSON formatu
+            let data = {
+                target: target,
+                tool: tool
+            };
+
+            // Slanje podataka na backend koristeći fetch
+            fetch('/whois_lookup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Sigurno postavljamo Content-Type
+                },
+                body: JSON.stringify(data) // Podaci u JSON formatu
+            })
+            .then(response => {
+                // Provera da li je odgovor uspešan
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Parsiranje JSON odgovora
+            })
+            .then(result => {
+                // Prikazivanje rezultata u HTML-u
+                document.getElementById('result').innerText = result.result || 'No result found';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'An error occurred: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>

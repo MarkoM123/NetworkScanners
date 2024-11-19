@@ -1,0 +1,66 @@
+body {
+    background-color: #000;
+    color: #0f0;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding: 20px;
+    margin: auto;
+    max-width: 800px;
+    text-align: center;
+    border: 2px solid #0f0;
+    border-radius: 10px;
+    background-color: #111;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #0f0;
+}
+
+form {
+    margin: 20px 0;
+}
+
+label {
+    font-size: 18px;
+}
+
+select, input {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background: #0f0;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+button:hover {
+    background: #080;
+    color: #fff;
+}
+
+pre {
+    text-align: left;
+    padding: 10px;
+    background-color: #222;
+    border: 1px solid #0f0;
+    border-radius: 5px;
+    overflow-x: auto;
+}
