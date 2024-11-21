@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medusa - Password Cracking</title>
+    <link rel="stylesheet" href="static/reconissance.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Medusa - Password Cracking Tool</h1>
+        <form id="medusa-form">
+            <label for="target">Destination (IP or URL):</label>
+            <input type="text" id="target" name="target" placeholder="192.168.1.1" required>
+            
+            <label for="protocol">Protocol:</label>
+            <select id="protocol" name="protocol">
+                <option value="ssh">SSH</option>
+                <option value="ftp">FTP</option>
+                <option value="http">HTTP</option>
+                <option value="smtp">SMTP</option>
+                <option value="pop3">POP3</option>
+                <option value="imap">IMAP</option>
+            </select>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="admin" required>
+
+            <label for="password-list">List of passwords:</label>
+            <input type="text" id="password-list" name="password-list" placeholder="/path/to/passwords.txt" required>
+
+            <label for="port">Port (optional:</label>
+            <input type="number" id="port" name="port" placeholder="22">
+
+            <label for="threads">Number of threads (optional):</label>
+            <input type="number" id="threads" name="threads" placeholder="4">
+
+            <button type="submit">Run Medusa</button>
+        </form>
+
+        <div id="results">
+            <h2>Results:</h2>
+            <pre id="output"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Event listener za formu
+        document.getElementById('medusa-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const target = document.getElementById('target').value;
+            const protocol = document.getElementById('protocol').value;
+            const username = document.getElementById('username').value;
+            const passwordList = document.getElementById('password-list').value;
+            const port = document.getElementById('port').value || null;
+            const threads = document.getElementById('threads').value || null;
+
+            const requestData = { target, protocol, username, passwordList, port, threads };
+
+            fetch('/run_medusa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').textContent = data.output || "Nema povratnih podataka.";
+            })
+            .catch(error => {
+                document.getElementById('output').textContent = "Došlo je do greške.";
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

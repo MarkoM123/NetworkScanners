@@ -13,7 +13,9 @@ def index():
 @app.route('/scan')
 def scan():
     return render_template('scan.html')
-
+@app.route('/password_cracking')
+def password_cracking():
+    return render_template('password_cracking.html')
 
 # Stranica za Network Scanners
 @app.route('/network_scanners')
@@ -220,34 +222,137 @@ def wifi_tools():
             result = "Invalid tool selected."
 
     return render_template('wifi_tools.html', result=result)
-@app.route('/password_cracking', methods=['GET', 'POST'])
-def password_cracking():
-    result = None
-    if request.method == 'POST':
-        tool = request.form['tool']
-        arguments = request.form['arguments']
-        
-        # Mape alatki na komandne linije
-        tools = {
-            'hydra': 'hydra',
-            'medusa': 'medusa',
-            'johntheripper': 'john',
-            'hashcat': 'hashcat'
-        }
+@app.route('/hydra')
+def hydra():
+    return render_template('hydra.html')
+@app.route('/run_hydra', methods=['POST'])
+def run_hydra():
+    data = request.get_json()
+    target = data.get('target')
+    protocol = data.get('protocol')
+    username = data.get('username')
+    password_list = data.get('passwordList')
+    port = data.get('port')
+    threads = data.get('threads')
 
-        # Ako je izabran validan alat
-        if tool in tools:
-            try:
-                # Formiramo komandu za izvršavanje
-                command = f"{tools[tool]} {arguments}"
-                process = subprocess.run(command.split(), capture_output=True, text=True)
-                result = process.stdout or process.stderr
-            except Exception as e:
-                result = f"Error: {e}"
-        else:
-            result = "Invalid tool selected."
-    
-    return render_template('password_cracking.html', result=result)
+    # Validacija unosa
+    if not target or not protocol or not password_list:
+        return jsonify({"error": "Ciljna adresa, protokol i lista lozinki su obavezni parametri"}), 400
+
+    # Formiranje komande
+    command = f"hydra -l {username} -P {password_list} {target} {protocol}"
+    if port:
+        command += f" -s {port}"
+    if threads:
+        command += f" -t {threads}"
+
+    try:
+        # Pokretanje Hydra alata
+        result = subprocess.run(command.split(), capture_output=True, text=True)
+        output = result.stdout or result.stderr
+    except Exception as e:
+        output = f"Greška prilikom pokretanja Hydra: {str(e)}"
+
+    return jsonify({"output": output})
+@app.route('/medusa')
+def medusa():
+    return render_template('medusa.html')
+
+@app.route('/run_medusa', methods=['POST'])
+def run_medusa():
+    data = request.get_json()
+    target = data.get('target')
+    username = data.get('username')
+    password_list = data.get('passwordList')
+    protocol = data.get('protocol')
+    port = data.get('port', None)
+    threads = data.get('threads', None)
+
+    if not target or not username or not password_list or not protocol:
+        return jsonify({"error": "Ciljna adresa, korisničko ime, lista lozinki i protokol su obavezni parametri"}), 400
+
+    # Kreiraj komandnu liniju za Medusa
+    command = f"medusa -h {target} -u {username} -P {password_list} -M {protocol}"
+    if port:
+        command += f" -n {port}"
+    if threads:
+        command += f" -t {threads}"
+
+    try:
+        # Pokretanje Medusa komande
+        result = subprocess.run(command.split(), capture_output=True, text=True)
+        output = result.stdout or result.stderr
+    except Exception as e:
+        output = f"Greška prilikom pokretanja Medusa: {str(e)}"
+
+    return jsonify({"output": output})
+
+
+@app.route('/johntheripper')
+def johntheripper():
+    return render_template('john.html')
+@app.route('/run_john', methods=['POST'])
+def run_john():
+    data = request.get_json()
+    wordlist = data.get('wordlist')
+    hash_file = data.get('hashFile')
+    format = data.get('format', None)
+    rules = data.get('rules', False)
+    incremental = data.get('incremental', False)
+
+    if not hash_file:
+        return jsonify({"error": "Hash fajl je obavezan parametar"}), 400
+
+    # Kreiraj komandnu liniju za John
+    command = f"john {hash_file}"
+    if wordlist:
+        command += f" --wordlist={wordlist}"
+    if format:
+        command += f" --format={format}"
+    if rules:
+        command += " --rules"
+    if incremental:
+        command += " --incremental"
+
+    try:
+        # Pokretanje John komande
+        result = subprocess.run(command.split(), capture_output=True, text=True)
+        output = result.stdout or result.stderr
+    except Exception as e:
+        output = f"Greška prilikom pokretanja JohnTheRipper: {str(e)}"
+
+    return jsonify({"output": output})
+
+@app.route('/hashcat')
+def hashcat():
+    return render_template('hashcat.html')
+@app.route('/run_hashcat', methods=['POST'])
+def run_hashcat():
+    data = request.get_json()
+    hash_file = data.get('hashFile')
+    wordlist = data.get('wordlist', None)
+    attack_mode = data.get('attackMode', None)
+    hash_type = data.get('hashType', None)
+    rules = data.get('rules', None)
+
+    if not hash_file:
+        return jsonify({"error": "Hash fajl je obavezan parametar"}), 400
+
+    # Kreiraj komandnu liniju za Hashcat
+    command = f"hashcat -m {hash_type} -a {attack_mode} {hash_file}"
+    if wordlist:
+        command += f" {wordlist}"
+    if rules:
+        command += f" --rules-file={rules}"
+
+    try:
+        # Pokretanje Hashcat komande
+        result = subprocess.run(command.split(), capture_output=True, text=True)
+        output = result.stdout or result.stderr
+    except Exception as e:
+        output = f"Greška prilikom pokretanja Hashcat: {str(e)}"
+
+    return jsonify({"output": output})
 @app.route('/sniffing')
 def sniffing_home():
     return render_template('sniffing.html')

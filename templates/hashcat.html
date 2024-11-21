@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hashcat - Password Cracking</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hashcat - Password Cracking Tool</h1>
+        <form id="hashcat-form">
+            <label for="hash-file">Hash file:</label>
+            <input type="text" id="hash-file" name="hashFile" placeholder="/path/to/hashfile.txt" required>
+
+            <label for="wordlist">Word list:</label>
+            <input type="text" id="wordlist" name="wordlist" placeholder="/path/to/wordlist.txt">
+
+            <label for="attack-mode">Način napada:</label>
+            <select id="attack-mode" name="attackMode" required>
+                <option value="0">Dictionary</option>
+                <option value="1">Combination</option>
+                <option value="3">Mask</option>
+                <option value="6">Dictionary and Mask <action>
+                <option value="7">Hybrid Mask and Dictionary</option>
+            </select>
+
+            <label for="hash-type">Hash Type:</label>
+            <input type="text" id="hash-type" name="hashType" placeholder="npr. 0 za MD5, 1000 za NTLM" required>
+
+            <label for="rules-file">Rules (optional):</label>
+            <input type="text" id="rules-file" name="rules" placeholder="/path/to/rulesfile.txt">
+
+            <button type="submit">Run Hashcat</button>
+        </form>
+
+        <div id="results">
+            <h2>Rezultati:</h2>
+            <pre id="output"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Event listener za formu
+        document.getElementById('hashcat-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const hashFile = document.getElementById('hash-file').value;
+            const wordlist = document.getElementById('wordlist').value || null;
+            const attackMode = document.getElementById('attack-mode').value;
+            const hashType = document.getElementById('hash-type').value;
+            const rules = document.getElementById('rules-file').value || null;
+
+            const requestData = { hashFile, wordlist, attackMode, hashType, rules };
+
+            fetch('/run_hashcat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').textContent = data.output || "Nema povratnih podataka.";
+            })
+            .catch(error => {
+                document.getElementById('output').textContent = "Došlo je do greške.";
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
