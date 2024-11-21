@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Other DDoS Tools</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='wifi_tools.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Other DDoS Tools</h1>
+
+        <form id="others-form">
+            <label for="ip-address">IP Adresa za napad:</label>
+            <input type="text" id="ip-address" name="ip-address" placeholder="192.168.1.1" required>
+            <br><br>
+
+            <label for="attack-type">Vrsta napada:</label>
+            <select id="attack-type" name="attack-type">
+                <option value="syn">TCP SYN Flood</option>
+                <option value="reflection">Reflection Attack</option>
+                <option value="amplification">Amplification Attack</option>
+                <option value="yoyo">YoYo Attack</option>
+            </select>
+            <br><br>
+            <button type="submit">Pokreni Napad</button>
+        </form>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // Event listener za formu napada
+        document.getElementById('others-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const ipAddress = document.getElementById('ip-address').value;
+            const attackType = document.getElementById('attack-type').value;
+
+            // Poziv backend-a za pokretanje napada
+            fetch('/run_others_attack', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ipAddress, attackType })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('output').textContent = data.output || "Nema povratnih podataka.";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('output').textContent = "Došlo je do greške.";
+            });
+        });
+    </script>
+</body>
+</html>
