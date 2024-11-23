@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kismet Tool</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Kismet Tool</h1>
+        <p>Select an action to perform:</p>
+
+        <form method="POST">
+            <label for="action">Action:</label>
+            <select id="action" name="action" required>
+                <option value="start_server">Start Server</option>
+                <option value="list_devices">List Devices</option>
+                <option value="export_logs">Export Logs</option>
+            </select>
+
+            <button type="submit" class="btn">Run</button>
+        </form>
+
+        {% if result %}
+        <div class="result">
+            <h2>Result:</h2>
+            <pre>{{ result }}</pre>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

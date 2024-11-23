@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNS Enumeration</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="static/style.css">
 </head>
 <body>
     <h1>DNS Enumeration Tools</h1>
@@ -27,50 +27,36 @@
         </form>
     </div>
 
-    <div id="resultContainer">
+    <div id="resultContainer" style="display: none;">
         <div id="result">Results will appear here...</div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const dnsForm = document.getElementById("dns-form");
+        document.getElementById('dns-form').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-            if (dnsForm) {
-                dnsForm.addEventListener("submit", function (event) {
-                    event.preventDefault(); // Sprečava osvežavanje stranice
+            const formData = {
+                target: document.getElementById('ip').value,
+                tool: document.getElementById('tool').value,
+            };
 
-                    const ip = document.getElementById("ip").value;
-                    const tool = document.getElementById("tool").value;
-
-                    console.log(`Pokrećem alat ${tool} za metu ${ip}`);
-
-                    // AJAX zahtev ka Flask backend-u
-                    fetch('/dns_enum', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            target: ip,
-                            tool: tool,
-                        }),
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            const resultContainer = document.getElementById("result");
-                            if (data.error) {
-                                resultContainer.textContent = `Greška: ${data.error}`;
-                            } else {
-                                resultContainer.textContent = data.result;
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Greška pri slanju zahteva:', error);
-                            const resultContainer = document.getElementById("result");
-                            resultContainer.textContent = "Došlo je do greške pri obradi zahteva.";
-                        });
-                });
-            }
+            fetch('/dns_enum', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    document.getElementById('result').textContent = data.result;
+                    document.getElementById('resultContainer').style.display = 'block';
+                } else {
+                    document.getElementById('result').textContent = 'Error: ' + (data.error || 'Unknown error.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         });
     </script>
 </body>

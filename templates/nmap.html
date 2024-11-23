@@ -1,34 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nmap Scanner</title>
-    <link rel="stylesheet" href="/static/nmap.css"> <!-- Putanja do CSS-a je ispravna -->
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Nmap Scan</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='nmap.css') }}">
+    </head>
+    
 <body>
     <div class="container">
-        <h1>Nmap Network Scanner</h1>
-        <form id="nmapForm" method="POST">
-            <label for="ip" class="form-label">Enter IP Address:</label>
-            <input type="text" id="ip" name="ip" class="form-input" required placeholder="e.g., 192.168.1.1">
+        <h2>Nmap Scan</h2>
+        <form action="/nmap" method="POST" enctype="application/x-www-form-urlencoded">
+            <label for="target">Target IP:</label>
+            <input type="text" id="target" name="target" required><br><br>
 
-            <div class="options">
-                <label><input type="checkbox" id="ping_scan" name="ping_scan"> <span>Ping Scan</span></label>
-                <label><input type="checkbox" id="port_scan" name="port_scan"> <span>Port Scan</span></label>
-                <label><input type="checkbox" id="os_scan" name="os_scan"> <span>OS Scan</span></label>
-                <label><input type="checkbox" id="detect_service" name="detect_service"> <span>Detect Service</span></label>
-                <label><input type="checkbox" id="cve_detection" name="cve_detection"> <span>CVE Detection</span></label>
-                <label><input type="checkbox" id="flood_detection" name="flood_detection"> <span>Flood Detection</span></label>
-                <label><input type="checkbox" id="tcp_fin_scan" name="tcp_fin_scan"> <span>TCP FIN Scan</span></label>
+            <!-- Dodajemo div za opcije da bismo ih lakše organizovali u 2 kolone -->
+            <div class="options-row">
+                <div class="option">
+                    <label for="ping_scan">Ping Scan</label>
+                    <input type="checkbox" id="ping_scan" name="ping_scan">
+                </div>
+
+                <div class="option">
+                    <label for="port_scan">Port Scan</label>
+                    <input type="checkbox" id="port_scan" name="port_scan">
+                </div>
             </div>
 
-            <button type="submit" id="scanButton" class="btn">Start Scan</button>
-        </form>
+            <div class="options-row">
+                <div class="option">
+                    <label for="os_scan">OS Scan</label>
+                    <input type="checkbox" id="os_scan" name="os_scan">
+                </div>
 
-        <h3>Scan Results:</h3>
-        <pre id="result"></pre> <!-- Ovdje će se prikazivati rezultati skeniranja -->
+                <div class="option">
+                    <label for="detect_service">Detect Service Version</label>
+                    <input type="checkbox" id="detect_service" name="detect_service">
+                </div>
+            </div>
+
+            <div class="options-row">
+                <div class="option">
+                    <label for="cve_detection">CVEs Detection</label>
+                    <input type="checkbox" id="cve_detection" name="cve_detection">
+                </div>
+
+                <div class="option">
+                    <label for="flood_detection">Flood Detection</label>
+                    <input type="checkbox" id="flood_detection" name="flood_detection">
+                </div>
+            </div>
+
+            <div class="options-row">
+                <div class="option">
+                    <label for="tcp_fin_scan">TCP FIN Scan</label>
+                    <input type="checkbox" id="tcp_fin_scan" name="tcp_fin_scan">
+                </div>
+            </div>
+
+            <button type="submit">Start Scan</button>
+        </form>
     </div>
-    <script src="/static/js/nmap.js"></script> <!-- Putanja do JS fajla -->
 </body>
 </html>

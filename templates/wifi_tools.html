@@ -3,31 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wi-Fi Tools</title>
-    <link rel="stylesheet" href="/static/wifi_tools.css">
+    <title>WiFi Tools</title>
+    <link rel="stylesheet" href="/static/nmap.css">
 </head>
 <body>
     <div class="container">
-        <h1>Wi-Fi Tools Dashboard</h1>
-        <form method="POST" action="/wifi_tools">
-            <label for="tool">Select Tool:</label>
-            <select name="tool" id="tool">
-                <option value="aircrack-ng">Aircrack-ng</option>
-                <option value="kismet">Kismet</option>
-                <option value="wifite">Wifite</option>
-                <option value="wash">WPS Scan (Wash)</option>
-            </select>
-            <br><br>
-            <label for="arguments">Arguments:</label>
-            <input type="text" id="arguments" name="arguments" placeholder="Enter additional arguments">
-            <br><br>
-            <button type="submit">Run Tool</button>
-        </form>
+        <h1>WiFi Tools</h1>
+        <p>Select a tool to perform WiFi-related tasks:</p>
 
-        {% if result %}
-        <h2>Tool Output:</h2>
-        <pre>{{ result }}</pre>
-        {% endif %}
+        <!-- Dugmići za alate -->
+        <div class="button-group">
+            <a href="/aircrack" class="btn">Aircrack-ng</a>
+            <a href="/kismet" class="btn">Kismet</a>
+            <a href="/wifite" class="btn">Wifite</a>
+            <a href="/wash" class="btn">Wash</a>
+        </div>
     </div>
 </body>
 </html>

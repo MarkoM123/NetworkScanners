@@ -1,0 +1,59 @@
+/* Ovaj CSS kod će centrirati celu stranicu */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;  /* Horizontano centriranje */
+    align-items: center;      /* Vertikalno centriranje */
+    background-color: black;
+}
+
+.sniffing-container {
+    background-color:white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;  /* Maksimalna širina */
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.tool-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tool-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.tool-button:hover {
+    background-color: #45a049;
+}
+
+#output {
+    margin-top: 20px;
+}
+
+pre {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;       /* Omogućava prelom teksta */
+    word-wrap: break-word;       /* Omogućava prelom dugih reči */
+}

@@ -23,7 +23,7 @@
                 <option value="yoyo">YoYo Attack</option>
             </select>
             <br><br>
-            <button type="submit">Pokreni Napad</button>
+            <button type="submit">Launch Attack</button>
         </form>
 
         <div id="output"></div>
@@ -32,26 +32,34 @@
     <script>
         // Event listener za formu napada
         document.getElementById('others-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        event.preventDefault();
 
-            const ipAddress = document.getElementById('ip-address').value;
-            const attackType = document.getElementById('attack-type').value;
+        const ipAddress = document.getElementById('ip-address').value;
+        const attackType = document.getElementById('attack-type').value;
 
-            // Poziv backend-a za pokretanje napada
-            fetch('/run_others_attack', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ipAddress, attackType })
-            })
+        fetch('/run_others_attack', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ipAddress, attackType })
+                                   })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('output').textContent = data.output || "Nema povratnih podataka.";
-            })
+                 if (data.success) {
+                  // Sačuvaj podatke u localStorage
+                localStorage.setItem('attackResults', JSON.stringify(data));
+
+            // Preusmeri na stranicu rezultata
+                window.location.href = '/results.html';
+               } else {
+                  alert('Došlo je do greške: ' + (data.error || 'Nepoznata greška.'));
+                }
+                })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('output').textContent = "Došlo je do greške.";
-            });
-        });
+              console.error('Error:', error);
+               alert('Došlo je do greške prilikom pokretanja napada.');
+             });
+}          );
+
     </script>
 </body>
 </html>

@@ -1,20 +1,50 @@
-/* Glavni reset za marginu i padding */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Pozadinska boja za celu stranicu */
+/* Generalne stilizacije */
 body {
-    background-color: #121212;
-    font-family: 'Courier New', Courier, monospace;
+    background-color: #121212; /* Crna pozadina */
     color: #00ff00; /* Hakerski zeleni tekst */
+    font-family: 'Courier New', Courier, monospace;
     text-align: center;
+    position: relative;
+    transition: background-color 0.5s ease; /* Pozadinska boja sa promenom */
 }
 
-/* Container za centriranje sadržaja */
-.container {
+h1 {
+    font-size: 3rem;
+    color: #00ff00;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    border-bottom: 3px solid #00ff00;
+    padding-bottom: 10px;
+    text-shadow: 0px 0px 5px #00ff00, 0px 0px 10px #00ff00;
+}
+
+h2 {
+    font-size: 2rem;
+    color: #00ff00;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Animirana pozadina sa padajućim karakterima */
+@keyframes falling-code {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://www.transparenttextures.com/patterns/black-tile.png'); /* Pozadinska slika */
+    animation: falling-code 1s infinite linear;
+    opacity: 0.1;
+    z-index: -1; /* Pozicionira animaciju iza sadržaja */
+}
+
+.scan-container {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -23,23 +53,7 @@ body {
     justify-content: center;
 }
 
-/* Naslov */
-h1 {
-    font-size: 3rem;
-    margin-bottom: 30px;
-    text-transform: uppercase;
-    color: #00ff00;
-    border-bottom: 3px solid #00ff00;
-    padding-bottom: 10px;
-}
-
-/* Stil za dugmadi */
-.tool-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Razmak između dugmadi */
-}
-
+/* Stilovi za dugmadi */
 .tool-button {
     background-color: #333;
     color: #00ff00;
@@ -49,15 +63,73 @@ h1 {
     text-transform: uppercase;
     border: 2px solid #00ff00;
     border-radius: 10px;
-    transition: background-color 0.3s, transform 0.2s;
+    width: 250px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 0 15px #00ff00;
 }
 
 .tool-button:hover {
     background-color: #00ff00;
     color: #121212;
-    transform: scale(1.1); /* Efekat uvećanja */
+    transform: scale(1.1);
+    box-shadow: 0 0 30px #00ff00;
+    text-shadow: 0px 0px 10px #00ff00;
 }
 
 .tool-button:active {
-    transform: scale(0.95); /* Efekat smanjenja kad je dugme pritisnuto */
+    transform: scale(0.95);
+    box-shadow: 0 0 25px #00ff00;
 }
+
+/* Stilovi za dugmadi sa ikonama */
+.tool-button i {
+    margin-right: 10px;
+}
+
+/* Skrol efekat za pozadinu */
+body.scrolled {
+    background-color: #000; /* Tamnija pozadina kad korisnik skroluje */
+}
+
+/* Stil za linkove u meniju */
+a {
+    text-decoration: none;
+    color: #00ff00;
+    font-size: 1.2rem;
+    margin: 10px;
+}
+
+a:hover {
+    color: #00cc00;
+    text-decoration: underline;
+}
+
+/* Stil za centerirani sadržaj */
+.folders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.folder {
+    background-color: #333;
+    color: #00ff00;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.folder:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #00ff00;
+}
+
+/* Animacija padajućeg koda (ako je pozadinsko kretanje potrebno) */
+@keyframes falling-code {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+

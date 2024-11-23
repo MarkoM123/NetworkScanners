@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aircrack-ng</title>
+    <link rel="stylesheet" href="/static/wifi_tools.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Aircrack-ng Tool</h1>
+        <p>Select an action to perform:</p>
+
+        <form method="POST">
+            <label for="action">Action:</label>
+            <select id="action" name="action" required>
+                <option value="crack_handshake">Crack Handshake</option>
+                <option value="capture_traffic">Capture Traffic</option>
+                <option value="deauth_attack">Deauth Attack</option>
+                <option value="show_help">Show Help</option>
+            </select>
+
+            <label for="arguments">Arguments:</label>
+            <input type="text" id="arguments" name="arguments" placeholder="Enter arguments (e.g., -w wordlist.txt)">
+
+            <button type="submit" class="btn">Run</button>
+        </form>
+
+        {% if result %}
+        <div class="result">
+            <h2>Result:</h2>
+            <pre>{{ result }}</pre>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

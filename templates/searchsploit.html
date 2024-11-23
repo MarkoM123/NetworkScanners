@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SearchSploit Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='wifi_tools.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>SearchSploit</h1>
+        <p>Enter the target for exploit search:</p>
+        <form id="searchForm">
+            <input type="text" id="target" name="target" placeholder="Enter software or CVE">
+            <button type="submit">Search Exploit</button>
+        </form>
+
+        <div id="output">
+            <h2>Results</h2>
+            <pre id="result">No results yet.</pre>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript za slanje POST zahteva
+        document.getElementById('searchForm').addEventListener('submit', function (e) {
+            e.preventDefault();  // Sprečava default ponašanje forme (da ne osvežava stranicu)
+
+            var target = document.getElementById('target').value;  // Uzima unos sa forme
+
+            // Slanje POST zahteva sa target-om
+            fetch('/searchsploit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ target: target })  // Salje target kao JSON
+            })
+            .then(response => response.json())  // Parsira JSON odgovor
+            .then(data => {
+                document.getElementById('result').textContent = data.result;  // Prikazuje rezultat na stranici
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = "Error: " + error;
+            });
+        });
+    </script>
+</body>
+</html>

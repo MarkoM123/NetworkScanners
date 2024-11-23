@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rezultati napada</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Rezultati napada</h1>
+
+        <p><strong>Tip napada:</strong> <span id="attack-type"></span></p>
+        <p><strong>Broj poslatih paketa:</strong> <span id="packets-sent"></span></p>
+        <p><strong>Detalji:</strong> <span id="details"></span></p>
+
+        <canvas id="attack-chart" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        // Učitaj podatke iz lokalnog storage-a
+        const data = JSON.parse(localStorage.getItem('attackResults'));
+        if (data) {
+            document.getElementById('attack-type').textContent = data.attack_type;
+            document.getElementById('packets-sent').textContent = data.packets_sent;
+            document.getElementById('details').textContent = data.details;
+
+            // Generiši grafikon
+            const ctx = document.getElementById('attack-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Poslati paketi'],
+                    datasets: [{
+                        label: 'Broj paketa',
+                        data: [data.packets_sent],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

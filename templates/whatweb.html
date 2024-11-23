@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatWeb Tool</title>
+    <link rel="stylesheet" href="/static/whois_lookup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>WhatWeb - Web Application Scanner</h1>
+        <form method="POST" action="/whatweb">
+            <label for="target_url">Target URL:</label>
+            <input type="url" id="target_url" name="target_url" placeholder="http://example.com" required>
+
+            <label for="detailed_scan">Detailed Scan:</label>
+            <select id="detailed_scan" name="detailed_scan">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+
+            <label for="show_headers">Show HTTP Headers:</label>
+            <select id="show_headers" name="show_headers">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+
+            <button type="submit" class="btn">Run WhatWeb</button>
+        </form>
+
+        {% if result %}
+        <div class="output">
+            <h2>Scan Results:</h2>
+            <pre>{{ result }}</pre>
+        </div>
+        {% endif %}
+
+        <a href="/network_scanners" class="btn">Back to Network Scanners</a>
+    </div>
+</body>
+</html>

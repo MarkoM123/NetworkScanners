@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const dnsForm = document.getElementById("dns-form");
+    const whoisForm = document.getElementById("whois-form");
 
-    dnsForm.addEventListener("submit", function (event) {
+    whoisForm.addEventListener("submit", function (event) {
         event.preventDefault(); // Sprečava osvežavanje stranice
 
         const target = document.getElementById("target").value.trim();
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // AJAX zahtev ka Flask backend-u
-        fetch('/dns_enum', {
+        fetch('/whois_lookup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

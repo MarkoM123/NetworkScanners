@@ -1,46 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoldenEye</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>GoldenEye - Opcije</h1>
-        <form id="goldeneye-form">
-            <label for="target">Cilj (URL):</label>
-            <input type="text" id="target" name="target" placeholder="http://example.com" required>
-            <br><br>
-            <label for="threads">Broj niti:</label>
-            <input type="number" id="threads" name="threads" placeholder="10" required>
-            <br><br>
-            <button type="submit">Pokreni GoldenEye</button>
-        </form>
-        <div id="output"></div>
-    </div>
-    <script>
-        document.getElementById('goldeneye-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const target = document.getElementById('target').value;
-            const threads = document.getElementById('threads').value;
+<form id="goldeneye-form">
+    <label for="target">Cilj (URL):</label>
+    <input type="text" id="target" name="target" placeholder="http://example.com" required>
+    <label for="threads">Broj niti:</label>
+    <input type="number" id="threads" name="threads" min="1" placeholder="50" required>
+    <label for="proxy">Proxy (opciono):</label>
+    <input type="text" id="proxy" name="proxy" placeholder="http://proxy:port">
+    <label for="timeout">Timeout (sekunde):</label>
+    <input type="number" id="timeout" name="timeout" min="1" placeholder="10">
+    <label for="keep-alive">Simulacija održavanja veze (Keep-Alive):</label>
+    <input type="checkbox" id="keep-alive" name="keep_alive">
+    <br><br>
+    <button type="submit">Pokreni GoldenEye</button>
+</form>
+<div id="output"></div>
 
-            fetch('/run_goldeneye', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ target: target, threads: threads })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('output').textContent = data.output || "Nema povratnih podataka.";
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('output').textContent = "Došlo je do greške.";
-            });
-        });
-    </script>
-</body>
-</html>
+<script>
+document.getElementById('goldeneye-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const target = document.getElementById('target').value;
+    const threads = document.getElementById('threads').value;
+    const proxy = document.getElementById('proxy').value;
+    const timeout = document.getElementById('timeout').value;
+    const keepAlive = document.getElementById('keep-alive').checked;
 
+    fetch('/run_goldeneye', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target, threads, proxy, timeout, keep_alive: keepAlive })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('output').textContent = data.output || "Nema povratnih podataka.";
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('output').textContent = "Došlo je do greške.";
+    });
+});
+</script>

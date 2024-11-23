@@ -4,54 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Engineering Tools</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+        h1 {
+            font-size: 36px;
+            color: #ff6347; /* Tomatno crvena, naglašena */
+            animation: titleAnimation 2s ease-in-out infinite;
+        }
+        h1:hover {
+            color: #ff4500; /* Tamnija nijansa crvene na hover */
+        }
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #b0b0b0;
+        }
+        .button-container {
+            margin-top: 30px;
+        }
+        button {
+            font-size: 18px;
+            padding: 15px 30px;
+            margin: 15px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 2px solid #ff6347;
+            background-color: #222;
+            color: #ff6347;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+            transition: transform 0.2s, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #ff6347;
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.8);
+        }
+        button:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+        button:focus {
+            outline: none;
+        }
+        @keyframes titleAnimation {
+            0% { color: #ff6347; }
+            50% { color: #ff4500; }
+            100% { color: #ff6347; }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Social Engineering Tools</h1>
-        <p>Izaberite alat za socijalni inženjering:</p>
-        <form id="social-engineering-form">
-            <label for="tool">Odaberi alat:</label>
-            <select id="tool" name="tool">
-                <option value="phishing_email">Phishing Email</option>
-                <option value="fake_website">Lažni Web Sajt</option>
-                <option value="sms_spoofing">SMS Spoofing</option>
-            </select>
-            <br><br>
-            <label for="target">Unesite ciljnu adresu (email, URL, broj telefona):</label>
-            <input type="text" id="target" name="target" required>
-            <br><br>
-            <button type="submit">Pokreni alat</button>
-        </form>
 
-        <div id="result">
-            <!-- Rezultati alata će se prikazati ovde -->
-        </div>
+    <h1>Welcome to Social Engineering Tools</h1>
+    <p>Choose an option below to start the respective attack simulation:</p>
+    
+    <div class="button-container">
+        <button onclick="window.location.href='/phishing'">Phishing Email</button>
+        <button onclick="window.location.href='/smishing'">SMS Spoofing</button>
+        <button onclick="window.location.href='/fake-website'">Fake Website</button>
     </div>
 
-    <script>
-        document.getElementById('social-engineering-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const tool = document.getElementById('tool').value;
-            const target = document.getElementById('target').value;
-
-            fetch('/run_social_tool', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ tool, target })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const resultDiv = document.getElementById('result');
-                if (data.error) {
-                    resultDiv.innerHTML = `<p style="color:red;">Greška: ${data.error}</p>`;
-                } else {
-                    resultDiv.innerHTML = `<p style="color:green;">Rezultat: ${data.output}</p>`;
-                }
-            })
-            .catch(error => {
-                console.error("Došlo je do greške:", error);
-                document.getElementById('result').innerHTML = `<p style="color:red;">Došlo je do greške pri izvršavanju alata.</p>`;
+</body>
+</html>
