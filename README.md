@@ -73,7 +73,9 @@ Tools used for social engineering attacks such as phishing, email spoofing, fake
 
 This project requires several external libraries and tools. Below are the necessary installations:
 
+
 ### 1. **Python Dependencies**:
+
 
 Install Python 3.x and pip, if you haven't already.
 
@@ -83,6 +85,7 @@ Use `pip` to install the following Python libraries:
 pip install flask requests beautifulsoup4 dnspython twilio
 
 ### 2. **Other Tools**:
+
 Some tools in this project need to be installed separately. Follow the installation instructions below for each tool:
 
 - **Metasploit**: Install Metasploit Framework. Follow the [official installation guide](https://metasploit.help.rapid7.com/docs/installing-the-metasploit-framework).
@@ -94,6 +97,7 @@ Some tools in this project need to be installed separately. Follow the installat
 - **Aircrack-ng**: Install Aircrack-ng by following the [installation guide](https://www.aircrack-ng.org/).
 
 ### 3. **Required System Tools**:
+
 These tools can be installed via the package manager:
 
 - **Nmap**: Install via package manager:
