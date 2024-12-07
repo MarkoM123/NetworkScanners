@@ -131,6 +131,7 @@ These tools can be installed via the package manager:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+
 ### 5. **Ethical Usage Warning**:
 
 This project is intended for **educational purposes only**. The tools and scripts included are powerful and can be used to conduct various types of penetration testing, network scanning, and other security assessments. However, it is crucial to remember the following:
