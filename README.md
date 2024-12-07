@@ -84,7 +84,7 @@ Use `pip` to install the following Python libraries:
 ```bash
 pip install flask requests beautifulsoup4 dnspython twilio
 
-### 2. **Other Tools**:
+### 2. **Other Tools** :
 
 Some tools in this project need to be installed separately. Follow the installation instructions below for each tool:
 
@@ -96,36 +96,6 @@ Some tools in this project need to be installed separately. Follow the installat
 - **JohnTheRipper**: Install JohnTheRipper by following instructions on [GitHub](https://github.com/magnumripper/JohnTheRipper).
 - **Aircrack-ng**: Install Aircrack-ng by following the [installation guide](https://www.aircrack-ng.org/).
 
-### 3. **Required System Tools**:
-
-These tools can be installed via the package manager:
-
-- **Nmap**: Install via package manager:
-    ```bash
-    apt-get install nmap
-    ```
-    or
-    ```bash
-    yum install nmap
-    ```
-
-- **Hydra**: Install via package manager:
-    ```bash
-    apt-get install hydra
-    ```
-    or
-    ```bash
-    yum install hydra
-    ```
-
-- **JohnTheRipper**: Install via package manager:
-    ```bash
-    apt-get install john
-    ```
-    or
-    ```bash
-    yum install john
-    ```
 
 ### 3. Required System Tools:
 
