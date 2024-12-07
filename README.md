@@ -127,19 +127,49 @@ These tools can be installed via the package manager:
     yum install john
     ```
 
-### 4. **License**:
+### 3. Required System Tools:
+
+These tools can be installed via the package manager:
+
+- **Nmap**: Install via package manager:
+    ```bash
+    apt-get install nmap
+    ```
+    or
+    ```bash
+    yum install nmap
+    ```
+
+- **Hydra**: Install via package manager:
+    ```bash
+    apt-get install hydra
+    ```
+    or
+    ```bash
+    yum install hydra
+    ```
+
+- **JohnTheRipper**: Install via package manager:
+    ```bash
+    apt-get install john
+    ```
+    or
+    ```bash
+    yum install john
+    ```
+
+### 4. License:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-
-### 5. **Ethical Usage Warning**:
+### 5. Ethical Usage Warning:
 
 This project is intended for **educational purposes only**. The tools and scripts included are powerful and can be used to conduct various types of penetration testing, network scanning, and other security assessments. However, it is crucial to remember the following:
 
 - **Only use these tools in authorized environments.**
 - **Do not attempt to access networks, systems, or applications without explicit permission.**
 - Engaging in activities like unauthorized scanning, exploiting vulnerabilities, or performing DDoS attacks is illegal and unethical.
-  
+
 Always follow ethical guidelines and ensure you have written consent before performing any security tests on a network or system.
 
 By using this project, you agree to use it responsibly and legally. The author and contributors are not responsible for any illegal activities conducted using this code.
